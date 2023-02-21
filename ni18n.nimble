@@ -11,7 +11,7 @@ import strutils, os
 
 proc generateIndexHtml() =
     mvFile("ni18n.html", "index.html")
-    for file in walkDirRec(".", {pcFile}): exec(r"sed -i '' 's|$1\.html|index.html|g' $2" % ["ni18n", file])
+    for file in walkDirRec(".", {pcFile}): exec("sed -i '' 's/ni18n.html/index.html/g' $#" % file)
 
 task docs, "Generate API documentation":
     let hash = getEnv("GITHUB_SHA")
