@@ -13,8 +13,8 @@ proc generateIndexHtml() =
     let p = projectName()
     mvFile(p & ".html", "index.html")
     let sedOption = if buildOS == "linux": "-i" else: "-i ''"
-    let cmd = "sed $# 's/$#.html/index.html/g' $#" % [sedOption, p, file]
-    for file in walkDirRec(".", {pcFile}): exec cmd
+    for file in walkDirRec(".", {pcFile}):
+        exec "sed $# 's/$#.html/index.html/g' $#" % [sedOption, p, file]
 
 task docs, "Generate API documentation":
     let hash = getEnv("GITHUB_SHA")
