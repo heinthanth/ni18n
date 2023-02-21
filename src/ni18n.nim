@@ -1,10 +1,10 @@
 ## `ni18n` is Super Fast Nim Macros For Internationalization and Localization.
 ## 
-## It generates locale specific functions, lookup functions at compile time.
-## So, there's no runtime lookup of translation
-## as compile-time generated lookup functions will call correct locale specific functions.
+## It generates functions for each translation name at compile time.
+## So, there's no runtime translation lookup like HashMap.
 
 runnableExamples:
+
     type
         Locale = enum
             English
@@ -20,7 +20,7 @@ runnableExamples:
             withCount:
                 English = proc(count: int): string =
                     case count
-                    of 0: "I have no cats"
+                    of 0: "I don't have a cat"
                     of 1: "I have one cat"
                     else: "I have " & $count & " cats"
                 Chinese = proc(count: int): string =

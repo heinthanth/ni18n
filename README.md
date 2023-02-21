@@ -39,7 +39,7 @@ i18nInit Locale, true:
         withCount:
             English = proc(count: int): string =
                 case count
-                of 0: "I have no cats"
+                of 0: "I don't have a cat"
                 of 1: "I have one cat"
                 else: "I have " & $count & " cats"
             Chinese = proc(count: int): string =
@@ -68,10 +68,53 @@ echo ihaveCat_withCount(Chinese, 5)
 echo ihaveCat_withCount(Chinese, "some str") 
 ```
 
+## Behind the Scene
+
+Imagine u write this code:
+
+```nim
+type
+    Locale = enum
+        English
+        Chinese
+##
+i18nInit Locale, true:
+    hello:
+        English = "Hello, $name!"
+        Chinese = "你好, $name!"
+```
+
+Magic macro will convert that code into this:
+
+```nim
+type
+    Locale = enum
+        English
+        Chinese
+
+proc hello_English(args: varargs[string, `$`]): string =
+    format("Hello, $name!", args)
+
+proc hello_Chinese(args: varargs[string, `$`]): string =
+    format("你好, $name!", args)
+
+proc hello*(locale: Locale, args: varargs[string, `$`]): string =
+    case locale
+    of English: hello_English(args)
+    of Chinese: hello_Chinese(args)
+```
+
+So, we have just locale runtime check, but since that's enum, we're still going fast!
+
 ## Todos
 
 - [ ] more readable ( `hello(Chinese, "name", "黄小姐")` -> `hello(Chinese, "黄小姐")` )
 - [ ] cleaner lookup function ( `ihaveCat_withCount` -> `ihaveCat.withCount` )
+- [ ] check the lowest nim version we can use ( current: `1.6.10` )
+
+## Contributions
+
+Contributions, Ideas are welcome! For now, there're just simple test cases.
 
 ## License
 
