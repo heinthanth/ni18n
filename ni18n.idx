@@ -1,0 +1,1 @@
+i18nInit	index.html#i18nInit.m,typedesc,staticbool,untyped	ni18n: i18nInit(enumT: typedesc; shouldExportLookup: static bool;\n         translationPairs: untyped): untyped	
