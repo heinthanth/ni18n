@@ -1,4 +1,5 @@
-docs/api
+docs/*
+!docs/.gitkeep
 
 tests/*
 !tests/*.nims

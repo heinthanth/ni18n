@@ -1,3 +1,110 @@
+## `ni18n` is Super Fast Nim Macros For Internationalization and Localization.
+## 
+## It generates locale specific functions, lookup functions at compile time.
+## So, there's no runtime lookup of translation
+## as compile-time generated lookup functions will call correct locale specific functions.
+
+runnableExamples:
+    type
+        Locale = enum
+            English
+            Chinese
+
+    i18nInit Locale, true:
+        hello:
+            English = "Hello, $name!"
+            Chinese = "你好, $name!"
+        ihaveCat:
+            English = "I've cats"
+            Chinese = "我有猫"
+            withCount:
+                English = proc(count: int): string =
+                    case count
+                    of 0: "I have no cats"
+                    of 1: "I have one cat"
+                    else: "I have " & $count & " cats"
+                Chinese = proc(count: int): string =
+                    proc translateCount(count: int): string =
+                        case count
+                        of 2: "二"
+                        of 3: "三"
+                        of 4: "四"
+                        of 5: "五"
+                        else: $count
+
+                    return case count
+                        of 0: "我没有猫"
+                        of 1: "我有一只猫"
+                        else: "我有" & translateCount(count) & "只猫"
+
+    # prints "你好, 黄小姐!". This function behave the same as `strutils.format`
+    echo hello(Chinese, "name", "黄小姐")
+
+    # prints 我有猫
+    echo ihaveCat(Chinese)
+
+    # prints 我有五只猫
+    echo ihaveCat_withCount(Chinese, 5)
+
+## **Notes For `ni18n` DSL**
+## 
+## DSL has top-level translation definitions and sub-translation definitions.
+## Each translation definition can have multiple sub-translation definitions.
+## 
+## ```
+## root                 = seq[topLevelTranslation] ;
+## topLevelTranslation  = nameIdent ":" seq[translationPair] ;
+## translationPair      = localeIdent "=" translation
+##                      | nameIdent ":" seq[translationPair] ;
+## translation          = nnkStrLit | nnkLambda ;
+## ```
+## 
+## - Translation must exists for all possible locales.
+## - `nnkLambda` must have the same signature for all locales.
+## 
+## **Behind the Scene**
+## 
+## Imagine u write this code:
+## 
+## ```nim
+## type
+##     Locale = enum
+##         English
+##         Chinese
+##
+## i18nInit Locale, true:
+##     hello:
+##         English = "Hello, $name!"
+##         Chinese = "你好, $name!"
+## ```
+## 
+## Magic macro will convert that code into this:
+## 
+## ```nim
+## type
+##     Locale = enum
+##         English
+##         Chinese
+## 
+## proc hello_English(args: varargs[string, `$`]): string =
+##     format("Hello, $name!", args)
+## 
+## proc hello_Chinese(args: varargs[string, `$`]): string =
+##     format("你好, $name!", args)
+## 
+## proc hello*(locale: Locale, args: varargs[string, `$`]): string =
+##     case locale
+##     of English: hello_English(args)
+##     of Chinese: hello_Chinese(args)
+## ```
+## 
+## So, we have just locale runtime check, but since that's enum, we're still going fast!
+## 
+## ----
+## 
+## **See also**
+## * `strutils.\`%\` proc<https://nim-lang.org/docs/strutils.html#%25%2Cstring%2CopenArray%5Bstring%5D>`_ to learn more about string interpolation.
+
 import macros, strutils, sugar, sequtils, tables, sets
 
 # since ni18n depends on strutils.format
@@ -78,6 +185,7 @@ proc genLocalSpecificFn(pIdent: NimNode, assignExpr: NimNode): NimNode {.compile
 
 proc generateLookupFn(shouldExportLookup: bool, enumT: NimNode,
                 curIdent: NimNode, signature: NimNode): NimNode {.compileTime.} =
+    ## generate lookup function for all locales pairs of a name
     result = newEmptyNode()
     # allowed enums
     let localeEnums = enumT[2][1..^1].map(e => ident(e.strVal()))
@@ -190,22 +298,31 @@ proc handleTranslation(enumT: NimNode, shouldExportLookup: bool,
             result.add generateLookupFn(shouldExportLookup, enumT, curIdent, fnSignature)
     else: assert(false) # unreachable
 
-macro i18nInit*(enumT: typedesc, exportLookup: static bool, names: untyped): untyped =
+macro i18nInit*(enumT: typedesc, shouldExportLookup: static bool, 
+                                    translationPairs: untyped): untyped =
+    ## compile translations DSL into locale specific procedures and lookup procedures
+    ## 
+    ## - `enumT` is the enum that contains all available locales
+    ## - `shouldExportLookup` is a boolean that indicates whether to export lookup functions
+    ## - `translationPairs` is a list of translation pairs
+    ## 
+    ## In most cases, `shouldExportLookup` should be set to `true` because u want to write translations in a separate file and import generated lookup functions from other modules.
+
     result = newStmtList()
     # translations must be a list of nnkCall statements
-    expectKind(names, nnkStmtList)
+    expectKind(translationPairs, nnkStmtList)
     expectKind(enumT, nnkSym)
 
     # resolve enumT to its root declaration
     let rootEnum = nnkTypeDef.newTree(
         ident(enumT.strVal()),
         newEmptyNode(), enumT.getType()[1])
-    
+
     # just a helper to merge multiple NimNode
     template merge(stmts: NimNode) = (for s in stmts: result.add s)
 
     # generate translations
-    for name in names:
+    for pair in translationPairs:
         # top-level ( root ) translation must be nnkCall statement
-        expectKind(name, nnkCall)
-        merge handleTranslation(rootEnum, exportLookup, newEmptyNode(), name)
+        expectKind(pair, nnkCall)
+        merge handleTranslation(rootEnum, shouldExportLookup, newEmptyNode(), pair)

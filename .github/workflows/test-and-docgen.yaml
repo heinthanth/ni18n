@@ -1,0 +1,26 @@
+name: "Run tests and Generate documentation"
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test-and-docgen:
+    name: Run tests and Generate documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup Nim
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: 'stable'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run tests
+        run: nimble test --accept
+      - name: Generate documentation
+        run: nimble docs
+      - name: Host docs on Github page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

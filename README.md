@@ -19,6 +19,8 @@ i18nInit Locale, true:
         English = "Hello, $name!"
         Chinese = "你好, $name!"
     ihaveCat:
+        English = "I've cats"
+        Chinese = "我有猫"
         withCount:
             English = proc(count: int): string =
                 case count
@@ -26,24 +28,35 @@ i18nInit Locale, true:
                 of 1: "I have one cat"
                 else: "I have " & $count & " cats"
             Chinese = proc(count: int): string =
-                case count
-                of 0: "我没有猫"
-                of 1: "我有一只猫"
-                else: "我有" & $count & "只猫"
+                proc translateCount(count: int): string =
+                    case count
+                    of 2: "二"
+                    of 3: "三"
+                    of 4: "四"
+                    of 5: "五"
+                    else: $count
+                return case count
+                    of 0: "我没有猫"
+                    of 1: "我有一只猫"
+                    else: "我有" & translateCount(count) & "只猫"
 
-# prints 我有一只猫
-echo ihaveCat_withCount(Chinese, 1)
+# prints "你好, 黄小姐!". This function behave the same as `strutils.format`
+echo hello(Chinese, "name", "黄小姐")
+
+# prints 我有猫
+echo ihaveCat(Chinese)
+
+# prints 我有五只猫
+echo ihaveCat_withCount(Chinese, 5)
 
 # compiler error here since each function is generated with the same signature from lambda
 echo ihaveCat_withCount(Chinese, "some str") 
-
-# prints "你好, 黄小姐!". This function behave the same as `strutils.format`
-hello(Chinese, ["name", "黄小姐"]) == "你好, 黄小姐!"
 ```
 
 ## Todos
 
-- [ ] cleaner lookup function ( i.e. `ihaveCat.withCount` instead of `ihaveCat_withCount` )
+- [ ] more readable ( `hello(Chinese, "name", "黄小姐")` -> `hello(Chinese, "黄小姐")` )
+- [ ] cleaner lookup function ( `ihaveCat_withCount` -> `ihaveCat.withCount` )
 
 ## License
 
