@@ -77,7 +77,7 @@ type
     Locale = enum
         English
         Chinese
-##
+
 i18nInit Locale, true:
     hello:
         English = "Hello, $name!"
