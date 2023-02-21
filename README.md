@@ -2,6 +2,21 @@
 
 Super Fast Nim Macros For Internationalization and Localization.
 
+## Installation
+
+You can add repo URL to `.nimble` file
+
+```nim
+requires "https://github.com/heinthanth/ni18n >= 0.1.0"
+```
+
+I've submitted PR to nim packges repo here <https://github.com/nim-lang/packages/pull/2509>.
+Once the PR is merged, u can install or require using just package name:
+
+```nim
+requires "ni18n >= 0.1.0"
+```
+
 ## Quick Start
 
 Super simple, Super Fast. No runtime lookup for translation: all translations are compiled down to Nim functions ( except we still have a runtime `case` statement for `locale` to call correct generated locale specific function )
