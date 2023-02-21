@@ -10,8 +10,11 @@ requires "nim >= 1.6.10"
 import strutils, os
 
 proc generateIndexHtml() =
-    mvFile("ni18n.html", "index.html")
-    for file in walkDirRec(".", {pcFile}): exec("sed -i '' 's/ni18n.html/index.html/g' $#" % file)
+    let p = projectName()
+    mvFile(p & ".html", "index.html")
+    let sedOption = if buildOS == "linux": "-i" else: "-i ''"
+    let cmd = "sed $# 's/$#.html/index.html/g' $#" % [sedOption, p, file]
+    for file in walkDirRec(".", {pcFile}): exec cmd
 
 task docs, "Generate API documentation":
     let hash = getEnv("GITHUB_SHA")
