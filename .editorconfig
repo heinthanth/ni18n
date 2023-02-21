@@ -1,0 +1,3 @@
+[*.{nim,nims}]
+indent_size = 4
+indent_style = space

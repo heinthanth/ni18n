@@ -1,0 +1,5 @@
+docs/api
+
+tests/*
+!tests/*.nims
+!tests/*.nim
