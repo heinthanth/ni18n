@@ -116,7 +116,7 @@ window.addEventListener('DOMContentLoaded', main);
 
   </div>
   &nbsp;&nbsp;<a
-href="https://github.com/heinthanth/ni18n/tree/cd9e3636377ef0dfdb0cd15f2584e14ba0e8f8bf/src/ni18n.nim#L1"
+href="https://github.com/heinthanth/ni18n/tree/915650d9af24908e2507e3a377a46acc8d4c3105/src/ni18n.nim#L1"
 class="link-seesrc" target="_blank">Source</a>
 &nbsp;&nbsp;<a href="https://github.com/heinthanth/ni18n/edit/devel/src/ni18n.nim#L1" class="link-seesrc" target="_blank" >Edit</a>
 
@@ -168,7 +168,10 @@ class="link-seesrc" target="_blank">Source</a>
 <span class="Identifier">echo</span> <span class="Identifier">ihaveCat</span><span class="Punctuation">(</span><span class="Identifier">Chinese</span><span class="Punctuation">)</span>
 
 <span class="Comment"># prints 我有五只猫</span>
-<span class="Identifier">echo</span> <span class="Identifier">ihaveCat_withCount</span><span class="Punctuation">(</span><span class="Identifier">Chinese</span><span class="Punctuation">,</span> <span class="DecNumber">5</span><span class="Punctuation">)</span></pre><p><strong>Notes For `ni18n` DSL</strong></p>
+<span class="Identifier">echo</span> <span class="Identifier">ihaveCat_withCount</span><span class="Punctuation">(</span><span class="Identifier">Chinese</span><span class="Punctuation">,</span> <span class="DecNumber">5</span><span class="Punctuation">)</span>
+
+<span class="Comment"># or like this ( because Nim compiler is smart! )</span>
+<span class="Identifier">echo</span> <span class="Identifier">ihaveCatWithCount</span><span class="Punctuation">(</span><span class="Identifier">Chinese</span><span class="Punctuation">,</span> <span class="DecNumber">5</span><span class="Punctuation">)</span></pre><p><strong>Notes For `ni18n` DSL</strong></p>
 <p>DSL has top-level translation definitions and sub-translation definitions. Each translation definition can have multiple sub-translation definitions.</p>
 <p><pre class="listing">
 root                 = seq[topLevelTranslation] ;
@@ -230,9 +233,9 @@ compile translations DSL into locale specific procedures and lookup procedures<u
 <p>In most cases, <tt class="docutils literal"><span class="pre"><span class="Identifier">shouldExportLookup</span></span></tt> should be set to <tt class="docutils literal"><span class="pre"><span class="Identifier">true</span></span></tt> because u want to write translations in a separate file and import generated lookup functions from other modules.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/heinthanth/ni18n/tree/cd9e3636377ef0dfdb0cd15f2584e14ba0e8f8bf/src/ni18n.nim#L301"
+href="https://github.com/heinthanth/ni18n/tree/915650d9af24908e2507e3a377a46acc8d4c3105/src/ni18n.nim#L304"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/heinthanth/ni18n/edit/devel/src/ni18n.nim#L301" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/heinthanth/ni18n/edit/devel/src/ni18n.nim#L304" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -246,7 +249,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-21 14:23:43 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-22 15:16:46 UTC</small>
       </div>
     </div>
   </div>
