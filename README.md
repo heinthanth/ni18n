@@ -31,12 +31,15 @@ type
 
 i18nInit Locale, true:
     hello:
+        # translations can be string literal
         English = "Hello, $name!"
         Chinese = "你好, $name!"
     ihaveCat:
         English = "I've cats"
         Chinese = "我有猫"
+        # translation definition can have sub-translation definition
         withCount:
+            # translations can be lambda / closure
             English = proc(count: int): string =
                 case count
                 of 0: "I don't have a cat"
@@ -63,6 +66,9 @@ echo ihaveCat(Chinese)
 
 # prints 我有五只猫
 echo ihaveCat_withCount(Chinese, 5)
+
+# or like this ( because Nim compiler is smart! )
+echo ihaveCatWithCount(Chinese, 5)
 
 # compiler error here since each function is generated with the same signature from lambda
 echo ihaveCat_withCount(Chinese, "some str") 
@@ -105,12 +111,6 @@ proc hello*(locale: Locale, args: varargs[string, `$`]): string =
 ```
 
 So, we have just locale runtime check, but since that's enum, we're still going fast!
-
-## Todos
-
-- [ ] more readable ( `hello(Chinese, "name", "黄小姐")` -> `hello(Chinese, "黄小姐")` )
-- [ ] cleaner lookup function ( `ihaveCat_withCount` -> `ihaveCat.withCount` )
-- [ ] check the lowest nim version we can use ( current: `1.6.10` )
 
 ## Contributions
 

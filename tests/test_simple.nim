@@ -39,9 +39,9 @@ suite "simple test suite":
         check hello(Chinese, "name", "黄小姐") == "你好, 黄小姐!"
 
     test "simple test #2":
-        check ihaveCat_withCount(Chinese, 0) == "我没有猫"
-        check ihaveCat_withCount(Chinese, 1) == "我有一只猫"
-        check ihaveCat_withCount(Chinese, 5) == "我有五只猫"
+        check ihaveCatWithCount(Chinese, 0) == "我没有猫"
+        check ihaveCatWithCount(Chinese, 1) == "我有一只猫"
+        check ihaveCatWithCount(Chinese, 5) == "我有五只猫"
 
     test "simple test #3":
         check ihaveCat(English) == "I've cats"
