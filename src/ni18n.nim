@@ -46,6 +46,9 @@ runnableExamples:
     # prints 我有五只猫
     echo ihaveCat_withCount(Chinese, 5)
 
+    # or like this ( because Nim compiler is smart! )
+    echo ihaveCatWithCount(Chinese, 5)
+
 ## **Notes For `ni18n` DSL**
 ## 
 ## DSL has top-level translation definitions and sub-translation definitions.

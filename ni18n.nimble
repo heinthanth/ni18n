@@ -5,7 +5,7 @@ license       = "MIT"
 srcDir        = "src"
 installExt    = @["nim"]
 
-requires "nim >= 1.6.10"
+requires "nim >= 1.0.0"
 
 import strutils, os
 
