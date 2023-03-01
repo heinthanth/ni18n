@@ -1,17 +1,11 @@
 # ni18n ( nim + i18n )
 
-Super Fast Nim Macros For Internationalization and Localization.
+Super Fast Nim Macros For Internationalization and Localization.<br/>
+It can prevent missing locales, duplicated translation name and invalid string interpolation signature at compile-time.
 
 ## Installation
 
 You can add repo URL to `.nimble` file
-
-```nim
-requires "https://github.com/heinthanth/ni18n >= 0.1.0"
-```
-
-I've submitted PR to nim packges repo here <https://github.com/nim-lang/packages/pull/2509>.
-Once the PR is merged, u can install or require using just package name:
 
 ```nim
 requires "ni18n >= 0.1.0"
@@ -98,13 +92,13 @@ type
         English
         Chinese
 
-proc hello_English(args: varargs[string, `$`]): string =
+proc hello_English(args: varargs[string, `$`]): string {.inline.} =
     format("Hello, $name!", args)
 
-proc hello_Chinese(args: varargs[string, `$`]): string =
+proc hello_Chinese(args: varargs[string, `$`]): string {.inline.} =
     format("你好, $name!", args)
 
-proc hello*(locale: Locale, args: varargs[string, `$`]): string =
+proc hello*(locale: Locale, args: varargs[string, `$`]): string {.inline.} =
     case locale
     of English: hello_English(args)
     of Chinese: hello_Chinese(args)
